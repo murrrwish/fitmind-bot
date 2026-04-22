@@ -2,54 +2,42 @@ from vkbottle import Bot, Message
 
 import os
 
+from flask import Flask
+
+import threading
+
 TOKEN = os.getenv("VK_TOKEN")
 
 bot = Bot(token=TOKEN)
+
+app = Flask(__name__)
 
 @bot.on.message(text="/start")
 
 async def start_handler(message: Message):
 
-    await message.answer(
-
-        "Привет! Я Fitmind 💪\n\n"
-
-        "Выбери, что хочешь сделать:\n"
-
-        "1. Рассчитать КБЖУ\n"
-
-        "2. План тренировок\n"
-
-        "3. План питания\n"
-
-        "4. Загрузить InBody"
-
-    )
+    await message.answer("Привет! Я Fitmind 💪")
 
 @bot.on.message()
 
 async def handle(message: Message):
 
-    text = message.text.lower()
+    await message.answer("Я работаю 😎")
 
-    if "кбжу" in text:
+# фейковый сервер (важно!)
 
-        await message.answer("Введи: вес, рост, возраст")
+@app.route("/")
 
-    elif "трен" in text:
+def home():
 
-        await message.answer("Сколько раз в неделю хочешь тренироваться?")
+    return "Bot is running!"
 
-    elif "питан" in text:
+def run_bot():
 
-        await message.answer("Сейчас составлю тебе план питания...")
+    bot.run_forever()
 
-    elif "inbody" in text:
+if name == "__main__":
 
-        await message.answer("Отправь фото анализа")
+    threading.Thread(target=run_bot).start()
 
-    else:
-
-        await message.answer("Напиши /start чтобы начать")
-
-bot.run_forever()
+    app.run(host="0.0.0.0", port=10000)
